@@ -8,7 +8,7 @@ class MainWindow;
 
 class DrawingTool {
 public:
-    DrawingTool(MainWindow *window);
+    explicit DrawingTool(MainWindow *window);
     virtual void startDrawing(QPoint startPoint) = 0;
     virtual void draw(QPoint currentPoint) = 0;
     virtual void stopDrawing(QPoint endPoint) = 0;

@@ -5,9 +5,11 @@
 
 class PenTool : public DrawingTool {
 public:
-    void startDrawing(QPoint startPoint) override;
-    void draw(QPoint currentPoint) override;
-    void stopDrawing(QPoint endPoint) override;
+    explicit PenTool(MainWindow *window);
+
+    void startDrawing(QPoint startPoint);
+    void draw(QPoint currentPoint);
+    void stopDrawing(QPoint endPoint);
 };
 
 

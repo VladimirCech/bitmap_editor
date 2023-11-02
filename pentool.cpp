@@ -1,5 +1,9 @@
 #include "pentool.h"
 
+PenTool::PenTool(MainWindow *window) : DrawingTool(window) {
+
+}
+
 void PenTool::startDrawing(QPoint startPoint) {
     isDrawing = true;
     lastPoint = startPoint;

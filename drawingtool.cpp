@@ -1,7 +1,7 @@
 #include "drawingtool.h"
 #include "mainwindow.h"
 
-DrawingTool::DrawingTool(MainWindow *window) {
+DrawingTool::DrawingTool(MainWindow *window) : window(window) {
 }
 
 void DrawingTool::setPen(){

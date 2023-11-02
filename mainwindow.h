@@ -13,12 +13,14 @@
 #include <QPrinter>
 #include <QPrintDialog>
 
+#include "pencil.h"
 
 namespace Ui {
     class MainWindow;
 }
 
-class Pencil;
+class DrawingTool;
+class PenTool;
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -31,8 +33,8 @@ public:
     int lineWidth;
     QColor currentColor;
     QActionGroup *tools;
-
 protected:
+
     void paintEvent(QPaintEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
@@ -40,12 +42,14 @@ protected:
     void saveImage(const QImage& image);
     void printImage();
     void openImage();
-
 private:
+
     Ui::MainWindow *ui;
     QImage image;
     Pencil *pencil;
     QString filePath;
+    PenTool* penTool;
+    DrawingTool* currentTool;
 
 private slots:
     void onLineWidthChanged(int value);
@@ -53,6 +57,7 @@ private slots:
     void on_actionSave_triggered();
     void on_actionOpen_triggered();
     void on_actionPrint_triggered();
+    void on_actionPen_triggered();
 };
 
 #endif // MAINWINDOW_H
