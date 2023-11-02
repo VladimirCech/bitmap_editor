@@ -1,11 +1,11 @@
-#ifndef BITMAP_EDITOR_PENTOOL_H
-#define BITMAP_EDITOR_PENTOOL_H
+#ifndef BITMAP_EDITOR_LINETOOL_H
+#define BITMAP_EDITOR_LINETOOL_H
 
 #include "drawingtool.h"
 
-class PenTool : public DrawingTool {
+class LineTool : public DrawingTool {
 public:
-    explicit PenTool(MainWindow *window);
+    explicit LineTool(MainWindow *window);
 
     void startDrawing(QPoint startPoint) override;
     void draw(QPoint currentPoint) override;
@@ -13,4 +13,4 @@ public:
 };
 
 
-#endif //BITMAP_EDITOR_PENTOOL_H
+#endif //BITMAP_EDITOR_LINETOOL_H

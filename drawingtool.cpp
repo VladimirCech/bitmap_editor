@@ -10,3 +10,15 @@ void DrawingTool::setPen(){
     pen.setJoinStyle(Qt::RoundJoin);
     pen.setCapStyle(Qt::RoundCap);
 }
+
+QPen DrawingTool::getPen() {
+    return pen;
+}
+
+QPoint DrawingTool::getStartPoint() {
+    return startPoint;
+}
+
+QPoint DrawingTool::getLastPoint() {
+    return lastPoint;
+}

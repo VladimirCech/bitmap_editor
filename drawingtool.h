@@ -13,15 +13,17 @@ public:
     virtual void draw(QPoint currentPoint) = 0;
     virtual void stopDrawing(QPoint endPoint) = 0;
     virtual ~DrawingTool() = default;
-
+    QPoint getStartPoint();
+    QPoint getLastPoint();
     void setPen();
+    QPen getPen();
+    bool isDrawing;
 
 protected:
     MainWindow* window;
     QPen pen;
     QPoint lastPoint;
     QPoint startPoint;
-    bool isDrawing;
 
 };
 
