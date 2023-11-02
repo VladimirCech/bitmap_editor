@@ -31,14 +31,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     currentColor = Qt::black;
 
-    connect(ui->lineWidthSpinBox, SIGNAL(valueChanged(int)), this, SLOT(onLineWidthChanged(int)));
-    connect(ui->actionSave, SIGNAL(changed()), this, SLOT(on_actionSave_triggered()));
-    connect(ui->actionOpen, SIGNAL(changed()), this, SLOT(on_actionOpen_triggered()));
-    connect(ui->actionPrint, SIGNAL(changed()), this, SLOT(on_actionPrint_triggered()));
-    connect(ui->actionPen, SIGNAL(triggered()), this, SLOT(on_actionPen_triggered()));
-    connect(ui->actionLine, SIGNAL(triggered()), this, SLOT(on_actionLine_triggered()));
-    connect(ui->actionSquare, SIGNAL(triggered()), this, SLOT(on_actionSquare_triggered()));
-    connect(ui->actionCircle, SIGNAL(triggered()), this, SLOT(on_actionCircle_triggered()));
+    connect(ui->lineWidthSpinBox, &QSpinBox::valueChanged, this, &MainWindow::onLineWidthChanged);
+    connect(ui->actionSave, &QAction::changed, this, &MainWindow::on_actionSave_triggered);
+    connect(ui->actionOpen, &QAction::changed, this, &MainWindow::on_actionOpen_triggered);
+    connect(ui->actionPrint, &QAction::changed, this, &MainWindow::on_actionPrint_triggered);
+    connect(ui->actionPen, &QAction::triggered, this, &MainWindow::on_actionPen_triggered);
+    connect(ui->actionLine, &QAction::triggered, this, &MainWindow::on_actionLine_triggered);
+    connect(ui->actionSquare, &QAction::triggered, this, &MainWindow::on_actionSquare_triggered);
+    connect(ui->actionCircle, &QAction::triggered, this, &MainWindow::on_actionCircle_triggered);
 
 }
 
