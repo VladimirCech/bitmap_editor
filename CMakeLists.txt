@@ -21,10 +21,18 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        pencil.h
-        pencil.cpp
+        bucket.h
+        bucket.cpp
+        pentool.cpp
+        pentool.h
         drawingtool.h
-        pentool.cpp pentool.h drawingtool.cpp)
+        drawingtool.cpp
+        linetool.cpp
+        linetool.h
+        squaretool.cpp
+        squaretool.h
+        circletool.cpp
+        circletool.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(bitmap_editor

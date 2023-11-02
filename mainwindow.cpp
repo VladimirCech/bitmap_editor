@@ -1,14 +1,23 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "pencil.h"
+#include "bucket.h"
+#include "pentool.h"
+#include "linetool.h"
+#include "squaretool.h"
+#include "circletool.h"
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MainWindow),
-        image(800, 600, QImage::Format_ARGB32),
-        pencil(new Pencil(this)) {
+        image(800, 600, QImage::Format_ARGB32) {
     ui->setupUi(this);
     image.fill(Qt::white);
+
+    penTool = new PenTool(this);
+    lineTool = new LineTool(this);
+    squareTool = new SquareTool(this);
+    circleTool = new CircleTool(this);
+    currentTool = penTool;
 
     lineWidth = ui->lineWidthSpinBox->value();
 
@@ -22,16 +31,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
     currentColor = Qt::black;
 
-    connect(ui->lineWidthSpinBox, SIGNAL(valueChanged(int)), this, SLOT(onLineWidthChanged(int)));
-    connect(ui->actionSave, SIGNAL(changed()), this, SLOT(on_actionSave_triggered()));
-    connect(ui->actionOpen, SIGNAL(changed()), this, SLOT(on_actionOpen_triggered()));
-    connect(ui->actionPrint, SIGNAL(changed()), this, SLOT(on_actionPrint_triggered()));
+    connect(ui->lineWidthSpinBox, &QSpinBox::valueChanged, this, &MainWindow::onLineWidthChanged);
+    connect(ui->actionSave, &QAction::changed, this, &MainWindow::on_actionSave_triggered);
+    connect(ui->actionOpen, &QAction::changed, this, &MainWindow::on_actionOpen_triggered);
+    connect(ui->actionPrint, &QAction::changed, this, &MainWindow::on_actionPrint_triggered);
+    connect(ui->actionPen, &QAction::triggered, this, &MainWindow::on_actionPen_triggered);
+    connect(ui->actionLine, &QAction::triggered, this, &MainWindow::on_actionLine_triggered);
+    connect(ui->actionSquare, &QAction::triggered, this, &MainWindow::on_actionSquare_triggered);
+    connect(ui->actionCircle, &QAction::triggered, this, &MainWindow::on_actionCircle_triggered);
 
 }
 
 MainWindow::~MainWindow() {
     delete ui;
-    delete pencil;
+    delete currentTool;
+    delete penTool;
+    delete lineTool;
+    delete circleTool;
+    delete squareTool;
 }
 
 QImage *MainWindow::getImage() {
@@ -41,45 +58,42 @@ QImage *MainWindow::getImage() {
 void MainWindow::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     painter.drawImage(0, 0, image);
-    pencil->setPen();
-    painter.setPen(pencil->getPen());
+    currentTool->setPen();
+    painter.setPen(currentTool->getPen());
 
     QMainWindow::paintEvent(event);
 
-    if (pencil->isDrawing && ui->actionSquare->isChecked()) {
-        QRect rect(pencil->getStartPoint(), pencil->getLastPoint());
+    if (currentTool->isDrawing && ui->actionSquare->isChecked()) {
+        QRect rect(currentTool->getStartPoint(), currentTool->getLastPoint());
         painter.drawRect(rect);
-    } else if (pencil->isDrawing && ui->actionCircle->isChecked()) {
-        QRect rect(pencil->getStartPoint(), pencil->getLastPoint());
+    } else if (currentTool->isDrawing && ui->actionCircle->isChecked()) {
+        QRect rect(currentTool->getStartPoint(), currentTool->getLastPoint());
         painter.drawEllipse(rect);
-    } else if (pencil->isDrawing && ui->actionLine->isChecked()) {
-        painter.drawLine(pencil->getStartPoint(), pencil->getLastPoint());
+    } else if (currentTool->isDrawing && ui->actionLine->isChecked()) {
+        painter.drawLine(currentTool->getStartPoint(), currentTool->getLastPoint());
     }
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
-    if (pencil && ui->actionPen->isChecked()) pencil->startDrawing(event->pos());
-    else if (pencil && ui->actionSquare->isChecked()) pencil->startDrawSquare(event->pos());
-    else if (pencil && ui->actionCircle->isChecked()) pencil->startDrawCircle(event->pos());
-    else if (pencil && ui->actionLine->isChecked()) pencil->startDrawLine(event->pos());
-    else if (pencil && ui->actionBucket->isChecked())
-        pencil->floodFill(image, event->pos(), image.pixelColor(event->pos()), currentColor);
+    if (currentTool) {
+        if (ui->actionBucket->isChecked()) {
+            Bucket::floodFill(image, event->pos(), image.pixelColor(event->pos()), currentColor);
+        } else { currentTool->startDrawing(event->pos()); }
+    }
     update();
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event) {
-    if (pencil && ui->actionPen->isChecked()) pencil->draw(event->pos());
-    else if (pencil && ui->actionSquare->isChecked()) pencil->drawSquare(event->pos());
-    else if (pencil && ui->actionCircle->isChecked()) pencil->drawCircle(event->pos());
-    else if (pencil && ui->actionLine->isChecked()) pencil->drawLine(event->pos());
+    if (currentTool) {
+        currentTool->draw(event->pos());
+    }
     update();
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
-    if (pencil && ui->actionPen->isChecked()) pencil->stopDraw();
-    else if (pencil && ui->actionSquare->isChecked()) pencil->stopDrawSquare(event->pos());
-    else if (pencil && ui->actionCircle->isChecked()) pencil->stopDrawCircle(event->pos());
-    else if (pencil && ui->actionLine->isChecked()) pencil->stopDrawLine(event->pos());
+    if (currentTool) {
+        currentTool->stopDrawing(event->pos());
+    }
     update();
 }
 
@@ -107,6 +121,22 @@ void MainWindow::on_actionOpen_triggered() {
 
 void MainWindow::on_actionPrint_triggered() {
     printImage();
+}
+
+void MainWindow::on_actionPen_triggered() {
+    currentTool = penTool;
+}
+
+void MainWindow::on_actionLine_triggered() {
+    currentTool = lineTool;
+}
+
+void MainWindow::on_actionSquare_triggered() {
+    currentTool = squareTool;
+}
+
+void MainWindow::on_actionCircle_triggered() {
+    currentTool = circleTool;
 }
 
 void MainWindow::saveImage(const QImage &saveImage) {
