@@ -44,6 +44,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow() {
     delete ui;
+    delete currentTool;
+    delete penTool;
+    delete lineTool;
+    delete circleTool;
+    delete squareTool;
 }
 
 QImage *MainWindow::getImage() {
