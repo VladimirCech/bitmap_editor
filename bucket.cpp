@@ -1,10 +1,13 @@
 #include <iostream>
 #include "bucket.h"
-#include "mainwindow.h"
 
 void Bucket::floodFill(QImage &image, QPoint point, QColor oldColor, QColor newColor) {
     // Check if the start point has the old color
     if (colorsAreClose(oldColor, newColor)){
+        return;
+    }
+
+    if (point.x() > image.width() || point.y() > image.width()){
         return;
     }
 

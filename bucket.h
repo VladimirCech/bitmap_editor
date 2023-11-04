@@ -4,10 +4,7 @@
 #include <QPoint>
 #include <QPen>
 #include <QPainter>
-#include <QActionGroup>
-#include <QPaintEvent>
 #include <QStack>
-#include <QApplication>
 
 class MainWindow;
 

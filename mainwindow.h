@@ -9,9 +9,12 @@
 #include <QFileDialog>
 #include <QImageWriter>
 #include <QMessageBox>
+#include <QFont>
 #include <QString>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QInputDialog>
+#include <QActionGroup>
 
 #include "bucket.h"
 
@@ -28,6 +31,8 @@ class LineTool;
 class SquareTool;
 
 class CircleTool;
+
+class TextTool;
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -67,6 +72,7 @@ private:
     LineTool *lineTool;
     SquareTool *squareTool;
     CircleTool *circleTool;
+    TextTool *textTool;
     DrawingTool *currentTool;
 
 private slots:
@@ -88,6 +94,8 @@ private slots:
     void on_actionSquare_triggered();
 
     void on_actionCircle_triggered();
+
+    void on_actionText_triggered();
 };
 
 #endif // MAINWINDOW_H

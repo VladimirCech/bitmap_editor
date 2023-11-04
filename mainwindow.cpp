@@ -5,6 +5,7 @@
 #include "linetool.h"
 #include "squaretool.h"
 #include "circletool.h"
+#include "texttool.h"
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
@@ -17,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     lineTool = new LineTool(this);
     squareTool = new SquareTool(this);
     circleTool = new CircleTool(this);
+    textTool = new TextTool(this);
     currentTool = penTool;
 
     lineWidth = ui->lineWidthSpinBox->value();
@@ -28,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     tools->addAction(ui->actionSquare);
     tools->addAction(ui->actionLine);
     tools->addAction(ui->actionBucket);
+    tools->addAction(ui->actionText);
 
     currentColor = Qt::black;
 
@@ -39,12 +42,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLine, &QAction::triggered, this, &MainWindow::on_actionLine_triggered);
     connect(ui->actionSquare, &QAction::triggered, this, &MainWindow::on_actionSquare_triggered);
     connect(ui->actionCircle, &QAction::triggered, this, &MainWindow::on_actionCircle_triggered);
+    connect(ui->actionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
 
 }
 
 MainWindow::~MainWindow() {
     delete ui;
-    delete currentTool;
     delete penTool;
     delete lineTool;
     delete circleTool;
@@ -84,14 +87,14 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event) {
-    if (currentTool) {
+    if (currentTool && currentTool->isDrawing) {
         currentTool->draw(event->pos());
     }
     update();
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
-    if (currentTool) {
+    if (currentTool && currentTool->isDrawing) {
         currentTool->stopDrawing(event->pos());
     }
     update();
@@ -103,7 +106,7 @@ void MainWindow::onLineWidthChanged(int value) {
 
 
 void MainWindow::on_setColorButton_clicked() {
-    QColor color = QColorDialog::getColor(Qt::white, this, "Choose Drawing Color");
+    QColor color = QColorDialog::getColor(Qt::white, this, "Vyberte barvu.");
     if (color.isValid()) {
         currentColor = color;
         // Update the button's background or icon to reflect the chosen color.
@@ -139,8 +142,20 @@ void MainWindow::on_actionCircle_triggered() {
     currentTool = circleTool;
 }
 
+void MainWindow::on_actionText_triggered() {
+
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Vložte text"),
+                                         tr("Vložte text (Nezapomeňte změnit velikost):"), QLineEdit::Normal,
+                                         tr("Zadejte text"), &ok);
+    if (ok && !text.isEmpty()) {
+        textTool->setText(text);
+        currentTool = textTool;
+    }
+}
+
 void MainWindow::saveImage(const QImage &saveImage) {
-    filePath = QFileDialog::getSaveFileName(nullptr, "Save Image", "",
+    filePath = QFileDialog::getSaveFileName(nullptr, "Uložit Obrázek", "",
                                             "PNG (*.png);;JPEG (*.jpeg *.jpg);;BMP (*.bmp);;All Files (*)");
 
     if (filePath.isEmpty()) {
@@ -154,17 +169,17 @@ void MainWindow::saveImage(const QImage &saveImage) {
     }
 
     if (!writer.write(saveImage)) {
-        QMessageBox::critical(nullptr, "Error", "Failed to save the image: " + writer.errorString());
+        QMessageBox::critical(nullptr, "Error", "Uložení selhalo: " + writer.errorString());
         return;
     }
 
-    QMessageBox::information(nullptr, "Success", "Image saved successfully!");
+    QMessageBox::information(nullptr, "Success", "Obrázek úspěšně uložen!");
 }
 
 void MainWindow::openImage() {
     // Show file open dialog
     QString fileName = QFileDialog::getOpenFileName(this,
-                                                    tr("Open Image"),
+                                                    tr("Otevřít Obrázek"),
                                                     QDir::homePath(),
                                                     tr("Images (*.png *.jpg *.bmp);;All Files (*)"));
 
@@ -182,7 +197,7 @@ void MainWindow::openImage() {
             window()->update();
         } else {
             // Error handling
-            QMessageBox::warning(this, tr("Open Image"), tr("The image file could not be loaded."));
+            QMessageBox::warning(this, tr("Otevřít Obrázek"), tr("Obrázek nemohl být načten."));
         }
     }
 }

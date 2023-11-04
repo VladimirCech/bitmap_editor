@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Bitmapový editor</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -41,7 +41,7 @@
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Šířka</string>
+           <string>Velikost</string>
           </property>
          </widget>
         </item>
@@ -94,6 +94,7 @@
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionPrint"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuTools">
@@ -101,11 +102,11 @@
      <string>Nástroje</string>
     </property>
     <addaction name="actionPen"/>
-    <addaction name="actionBrush"/>
     <addaction name="actionLine"/>
     <addaction name="actionSquare"/>
     <addaction name="actionCircle"/>
     <addaction name="actionBucket"/>
+    <addaction name="actionText"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
@@ -147,21 +148,42 @@
    </property>
   </action>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset theme="document-open"/>
+   </property>
    <property name="text">
     <string>Nahrát</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+O</string>
    </property>
   </action>
   <action name="actionSave">
    <property name="enabled">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset theme="document-save"/>
+   </property>
    <property name="text">
     <string>Uložit</string>
    </property>
+   <property name="shortcut">
+    <string>Meta+S</string>
+   </property>
   </action>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset theme="window-close"/>
+   </property>
    <property name="text">
     <string>Konec</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Q</string>
+   </property>
+   <property name="shortcutVisibleInContextMenu">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionLine">
@@ -184,8 +206,25 @@
    </property>
   </action>
   <action name="actionPrint">
+   <property name="icon">
+    <iconset theme="document-print"/>
+   </property>
    <property name="text">
     <string>Tisk</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+P</string>
+   </property>
+  </action>
+  <action name="actionText">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Text</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+T</string>
    </property>
   </action>
  </widget>

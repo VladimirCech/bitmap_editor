@@ -32,7 +32,7 @@ set(PROJECT_SOURCES
         squaretool.cpp
         squaretool.h
         circletool.cpp
-        circletool.h)
+        circletool.h texttool.cpp texttool.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(bitmap_editor
